@@ -8,18 +8,6 @@ AFRAME.registerComponent('clickable', {
     }
 });
 
-AFRAME.registerComponent('key', {
-    init: function () {
-        var el = this.el;
-        el.addEventListener('click', function () {
-            console.log('Picked up key', el);
-            el.parentNode.removeChild(el);
-            var doorEl = document.getElementById('door');
-            doorEl.setAttribute('door', 'key');
-            doorEl.components.door.hasKey = true;
-        });
-    }
-});
 
 AFRAME.registerComponent('door', {
     schema: {
@@ -30,17 +18,8 @@ AFRAME.registerComponent('door', {
         var el = this.el;
         el.addEventListener('click', function () {
             console.log('Clicked door', el);
-            if (this.hasKey) {
-                el.parentNode.removeChild(el);
-                document.getElementById('player').setAttribute('movement-controls', 'enabled', 'false');
-                setTimeout(function () {
-                    alert('You escaped!');
-                    window.location.reload();
-                }, 2000);
-            } else {
-                if (!el.getAttribute('animation')) {
-                    el.setAttribute('animation', 'property: rotation; from: 0 20 0; to: 0 -20 0; dur: 100; easing: easeInOutSine; dir: alternate; loop: 3');
-                }
+            if (!el.getAttribute('animation')) {
+                el.setAttribute('animation', 'property: rotation; from: 0 20 0; to: 0 -20 0; dur: 100; easing: easeInOutSine; dir: alternate; loop: 3');
             }
         }.bind(this));
 
@@ -71,3 +50,42 @@ AFRAME.registerComponent('camera-mover', {
         });
     }
 });
+AFRAME.registerComponent('menu', {
+    init: function () {
+        var el = this.el;
+        el.addEventListener('handleButtonClick', function (evt) {
+            console.log('Button clicked:', evt.detail.target.id);
+            // Perform action based on which button was clicked
+        });
+    }
+});
+
+
+const dialogs = [
+    {
+        text: 'This is the first message.'
+    },
+    {
+        text: 'This is the second message.',
+        options: [
+            { text: 'Option 1', action: 'next' },
+            { text: 'Option 2', action: 'next' },
+        ],
+    }, {
+        text: 'This is the third message.'
+    },
+
+];
+
+function typeText(element, message, index, callback) {
+    if (index < message.length) {
+        element.setAttribute('value', element.getAttribute('value') + message[index]);
+        setTimeout(function () {
+            typeText(element, message, index + 1, callback);
+        }, 50);
+    } else {
+        if (callback) {
+            callback();
+        }
+    }
+}
