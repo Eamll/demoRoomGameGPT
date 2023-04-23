@@ -3,11 +3,25 @@ AFRAME.registerComponent('clickable', {
         var el = this.el;
         el.addEventListener('click', function () {
             console.log('Clicked', el);
-            el.setAttribute('visible', false);
+
         });
     }
 });
 
+AFRAME.registerComponent('opciones', {
+    init: function () {
+        var el = this.el;
+        el.addEventListener('click', function () {
+
+            if (el.id === "option-1") {
+                alert("op1")
+            } else if (el.id === "option-2") {
+                alert("op2")
+            }
+            // el.setAttribute('visible', false);
+        });
+    }
+});
 
 AFRAME.registerComponent('door', {
     schema: {
@@ -50,16 +64,6 @@ AFRAME.registerComponent('camera-mover', {
         });
     }
 });
-AFRAME.registerComponent('menu', {
-    init: function () {
-        var el = this.el;
-        el.addEventListener('handleButtonClick', function (evt) {
-            console.log('Button clicked:', evt.detail.target.id);
-            // Perform action based on which button was clicked
-        });
-    }
-});
-
 
 const dialogs = [
     {
@@ -89,22 +93,3 @@ function typeText(element, message, index, callback) {
         }
     }
 }
-// document.addEventListener('DOMContentLoaded', function () {
-//     // Add a click event listener to the 'clickableBox' element
-//     document.querySelector('#clickableBox').addEventListener('click', function () {
-//         console.log('Clickable box clicked!');
-//         // Your interaction code here
-//     });
-
-//     // Add a click event listener to the 'option-1' element
-//     document.querySelector('#option-1').addEventListener('click', function () {
-//         console.log('Option 1 clicked!');
-//         // Your interaction code here
-//     });
-
-//     // Add a click event listener to the 'option-2' element
-//     document.querySelector('#option-2').addEventListener('click', function () {
-//         console.log('Option 2 clicked!');
-//         // Your interaction code here
-//     });
-// });
