@@ -17,19 +17,21 @@
             <a-asset-item id="model" src="street-light-fbx.gltf"></a-asset-item>
         </a-assets>
 
-        <a-entity id="player" camera position="0 1.6 0" look-controls>
-            <a-cursor></a-cursor>
-            <a-entity raycaster="objects: [clickable],[door];"></a-entity>
+        <a-entity id="player" camera position="0 1.6 0" look-controls wasd-controls>
+            <!-- <a-cursor raycaster="objects: [clickable], [door];"></a-cursor> -->
+            <a-entity cursor="rayOrigin: mouse" raycaster="objects: [clickable]"></a-entity>
+            <!-- <a-entity raycaster="objects: [clickable],[door];"></a-entity> -->
             <a-plane id="ui-menu" position="0 -0.55 -1.01" rotation="0 0 0" width="1" height="0.6" color="#000"
                 opacity="0.55"></a-plane>
+
             <a-text id="dialog-box" position="-0.35 -0.4 -1" scale="0.6 0.6 1" value="Dialog Box"></a-text>
             <a-text id="options-text" position="-0.3 -0.55 -1" scale="0.3 0.3 1" value="Choose an option:"></a-text>
             <a-entity id="option-1" position="-0.24721 -0.7 -1" geometry="primitive: plane; width: 0.4; height: 0.15;"
-                material="color: #4CC3D9; opacity: 1;">
+                material="color: #4CC3D9; opacity: 1;" clickable>
                 <a-text position="-0.15 0 0.01" text="value: Option 1; color: #080808; width: 1;"></a-text>
             </a-entity>
             <a-entity id="option-2" position="0.25 -0.7 -1" geometry="primitive: plane; width: 0.4; height: 0.15;"
-                material="color: #4CC3D9; opacity: 1;">
+                material="color: #4CC3D9; opacity: 1;" clickable>
                 <a-text position="-0.15 0 0.01" text="value: Option 2; color: #080808; width: 1;"></a-text>
             </a-entity>
         </a-entity>
@@ -38,7 +40,7 @@
 
         <a-box id="clickableBox" position="-1 0.45377 -3" rotation="0 45 0" color="#4CC3D9" clickable></a-box>
         <a-box id="cameraMoverBox" position="0.55421 0.35671 -3" rotation="0 45 0" scale="0.5 0.5 0.5" color="#4CC3D9"
-            camera-mover></a-box>
+            camera-mover clickable></a-box>
 
 
 
