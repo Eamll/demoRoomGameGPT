@@ -12,13 +12,6 @@ AFRAME.registerComponent('opciones', {
     init: function () {
         var el = this.el;
         el.addEventListener('click', function () {
-
-            // if (el.id === "option-1") {
-            //     alert("op1")
-            // } else if (el.id === "option-2") {
-            //     alert("op2")
-            // }
-            // // el.setAttribute('visible', false);
         });
     }
 });
@@ -67,22 +60,41 @@ AFRAME.registerComponent('camera-mover', {
 
 const dialogs = [
     {
-        text: 'This is the first message.'
+        text: "Un dia soleado, caminando hacia la escuela, te encuentras con tu amiga, quien te propone ir a un lugar especial despues de clases.",
     },
     {
-        text: 'This is the second message.',
+        text: "¿Que decides hacer?",
         options: [
-            { text: 'Optcion 1 omg' },
-            { text: 'Opcion 22' },
+            { text: "Negarse" },
+            { text: "Ir con tu amiga" },
         ],
-    }, {
-        text: 'This is the third message.'
     },
     {
-        text: 'This is the fourth Aliquip culpa laborum ut incididunt. Culpa in consectetur ea duis qui duis ut dolor labore ipsum dolore sit. Mollit irure adipisicing esse veniam nisi id ut ut. Dolor deserunt enim cillum reprehenderit labore aliqua tempor dolore. Adipisicing occaecat culpa ipsum amet. Cupidatat ea mollit pariatur commodo veniam reprehenderit eu..'
+        text: "Decides negarte y seguir caminando hacia la escuela. Mas tarde, te enteras de que habia personas sospechosas en ese lugar. ¡Buena decision!",
+        route: "option1",
+        end: true,
     },
-
+    {
+        text: "Decides ir con tu amiga. Al llegar al lugar, sientes que algo no esta bien y ves personas que parecen estar en problemas.",
+        route: "option2",
+    },
+    {
+        text: "¿Que haces a continuacion?",
+        options: [
+            { text: "Escapar y llamar a la policia" },
+            { text: "Tratar de ayudar a esas personas" },
+        ], route: "option2",
+    },
+    {
+        text: "Decides escapar rapidamente y llamar a la policia. Gracias a tu llamada, la policia rescata a las personas en peligro y evita un caso de trata y trafico de personas. ¡Bien hecho!",
+        route: "option1",
+    },
+    {
+        text: "Decides tratar de ayudar a esas personas, pero te ves atrapado en una situacion peligrosa. Afortunadamente, alguien ve lo que esta sucediendo y llama a la policia. Todos son rescatados, pero aprendiste la importancia de pedir ayuda a las autoridades en situaciones como esta.",
+        route: "option2",
+    },
 ];
+
 
 function typeText(element, message, index, callback) {
     if (index < message.length) {
@@ -96,10 +108,27 @@ function typeText(element, message, index, callback) {
         }
     }
 }
+function clearOptions() {
+    const option1 = document.getElementById("text-op1");
+    const option2 = document.getElementById("text-op2");
+
+    option1.setAttribute("text", {
+        value: "",
+    });
+    option2.setAttribute("text", {
+        value: "",
+    });
+
+    // Remove click event listeners
+    const option1Entity = document.getElementById("option-1");
+    const option2Entity = document.getElementById("option-2");
+
+    option1Entity.outerHTML = option1Entity.outerHTML;
+    option2Entity.outerHTML = option2Entity.outerHTML;
+}
 
 
-
-function showDialog(index) {
+function showDialog(index, currentRoute) {
     if (index < dialogs.length) {
         const dialog = dialogs[index];
         const dialogBox = document.getElementById("dialog-box");
@@ -128,18 +157,40 @@ function showDialog(index) {
                 // Add event listeners for the options
                 const option1Entity = document.getElementById("option-1");
                 const option2Entity = document.getElementById("option-2");
+                const cameraPositionsOption1 = [
+                    { x: 0, y: 1.6, z: -2 },
+                    { x: 1, y: 1.6, z: -2 },
+                ];
+
+                const cameraPositionsOption2 = [
+                    { x: 0, y: 1.6, z: -3 },
+                    { x: -1, y: 1.6, z: -3 },
+                ];
 
                 option1Entity.addEventListener("click", () => {
-                    showDialog(index + 1);
+                    showDialog(index + 1, 'option1');
+                    moveCamera(cameraPositionsOption1, 0);
                 });
                 option2Entity.addEventListener("click", () => {
-                    showDialog(index + 2);
+                    showDialog(index + 2, 'option2');
+                    moveCamera(cameraPositionsOption2, 0);
                 });
             } else {
+                clearOptions();
                 // If there are no options, automatically display the next dialog
-                setTimeout(() => {
-                    showDialog(index + 1);
-                }, 1000);
+                if (!dialog.end) {
+                    setTimeout(() => {
+                        let nextIndex = index + 1;
+
+                        // If the next dialog has a route and it doesn't match the current route, skip it
+                        while (dialogs[nextIndex] && dialogs[nextIndex].route && dialogs[nextIndex].route !== currentRoute) {
+                            nextIndex++;
+                        }
+
+                        showDialog(nextIndex, currentRoute);
+                    }, 1000);
+                }
+
             }
         });
         dialogBox.setAttribute("text", {
@@ -148,6 +199,23 @@ function showDialog(index) {
         });
     }
 }
+
+
+function moveCamera(positions, index) {
+    if (index < positions.length) {
+        const cameraEl = document.getElementById("player");
+        const newPosition = positions[index];
+
+        cameraEl.setAttribute("animation", {
+            property: "position",
+            to: newPosition,
+            dur: 1000, // duration of the animation in milliseconds
+            easing: "easeInOutQuad", // easing function
+            complete: () => moveCamera(positions, index + 1),
+        });
+    }
+}
+
 window.addEventListener("DOMContentLoaded", (event) => {
     showDialog(0)
 });
