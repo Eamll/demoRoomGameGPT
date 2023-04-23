@@ -13,12 +13,12 @@ AFRAME.registerComponent('opciones', {
         var el = this.el;
         el.addEventListener('click', function () {
 
-            if (el.id === "option-1") {
-                alert("op1")
-            } else if (el.id === "option-2") {
-                alert("op2")
-            }
-            // el.setAttribute('visible', false);
+            // if (el.id === "option-1") {
+            //     alert("op1")
+            // } else if (el.id === "option-2") {
+            //     alert("op2")
+            // }
+            // // el.setAttribute('visible', false);
         });
     }
 });
@@ -72,11 +72,14 @@ const dialogs = [
     {
         text: 'This is the second message.',
         options: [
-            { text: 'Option 1', action: 'next' },
-            { text: 'Option 2', action: 'next' },
+            { text: 'Optcion 1 omg' },
+            { text: 'Opcion 22' },
         ],
     }, {
         text: 'This is the third message.'
+    },
+    {
+        text: 'This is the fourth Aliquip culpa laborum ut incididunt. Culpa in consectetur ea duis qui duis ut dolor labore ipsum dolore sit. Mollit irure adipisicing esse veniam nisi id ut ut. Dolor deserunt enim cillum reprehenderit labore aliqua tempor dolore. Adipisicing occaecat culpa ipsum amet. Cupidatat ea mollit pariatur commodo veniam reprehenderit eu..'
     },
 
 ];
@@ -93,3 +96,58 @@ function typeText(element, message, index, callback) {
         }
     }
 }
+
+
+
+function showDialog(index) {
+    if (index < dialogs.length) {
+        const dialog = dialogs[index];
+        const dialogBox = document.getElementById("dialog-box");
+
+        // Clear the previous text
+        dialogBox.setAttribute("value", "");
+
+        // Type the new text
+        typeText(dialogBox, dialog.text, 0, () => {
+            // If there are options, display them
+            if (dialog.options) {
+                const option1 = document.getElementById("text-op1");
+                const option2 = document.getElementById("text-op2");
+
+                option1.setAttribute("text", {
+                    value: dialog.options[0].text,
+                    color: "#080808",
+                    width: 1,
+                });
+                option2.setAttribute("text", {
+                    value: dialog.options[1].text,
+                    color: "#080808",
+                    width: 1,
+                });
+
+                // Add event listeners for the options
+                const option1Entity = document.getElementById("option-1");
+                const option2Entity = document.getElementById("option-2");
+
+                option1Entity.addEventListener("click", () => {
+                    showDialog(index + 1);
+                });
+                option2Entity.addEventListener("click", () => {
+                    showDialog(index + 2);
+                });
+            } else {
+                // If there are no options, automatically display the next dialog
+                setTimeout(() => {
+                    showDialog(index + 1);
+                }, 1000);
+            }
+        });
+        dialogBox.setAttribute("text", {
+            width: 1,
+            wrapCount: 20,
+        });
+    }
+}
+window.addEventListener("DOMContentLoaded", (event) => {
+    showDialog(0)
+});
